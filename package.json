@@ -1,0 +1,19 @@
+{
+  "name": "crosshero-booking",
+  "version": "0.0.1",
+  "description": "CrossHero automated booking with Node.js and Puppeteer",
+  "main": "index.js",
+  "keywords": [
+    "crosshero",
+    "puppeteer",
+    "scrapping"
+  ],
+  "author": "Nauzet Hernandez <nauzethc@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^7.2.0",
+    "node-telegram-bot-api": "^0.51.0",
+    "puppeteer": "^8.0.0",
+    "simple-node-logger": "^18.12.24"
+  }
+}
