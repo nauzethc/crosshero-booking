@@ -1,6 +1,6 @@
 {
   "name": "crosshero-booking",
-  "version": "0.1",
+  "version": "0.1.1",
   "description": "CrossHero automated booking with Node.js and Puppeteer",
   "main": "index.js",
   "keywords": [
