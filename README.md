@@ -42,6 +42,16 @@ node main.js -p PROGRAM_HASH -d "DD/MM/YYYY" -t "HH:MM"
 
 ## Run with Docker
 
+Edit `config.js` and uncomment `executablePath` option.
+
+```
+...
+options: {
+  browser: {
+    executablePath: 'google-chrome-unstable', // <--
+...
+```
+
 `docker-compose.yml` is ready to install `puppeteer` and Google Chrome inside a Docker container.
 Also you can configure `crontab` which is registered within container to run automated bookings.
 
