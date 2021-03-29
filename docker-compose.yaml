@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  puppeteer:
+    build: .
+    init: true
+    command: tail -F /dev/null
+    security_opt:
+      - seccomp=./chrome.json

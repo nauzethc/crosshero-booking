@@ -1,0 +1,5 @@
+# Put your automated 
+# m h	d M w	command
+
+# Example, every monday at 18:30
+# 30 18	* * 1	node /home/node/app/main.js -p PROGRAM_ID -d "`date +"%d/%m/%Y"` -t "18:30"
