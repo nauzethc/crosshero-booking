@@ -15,7 +15,7 @@ program.requiredOption('-t, --time <time>', 'Class time in "HH:MM" format')
   const { programId, date, time } = program.opts()
 
   // Load browser
-  const browser = await puppeteer.launch({ headless: true })
+  const browser = await puppeteer.launch(options.browser)
   const page = await browser.newPage()
 
   // Step 1: Login
@@ -32,7 +32,7 @@ program.requiredOption('-t, --time <time>', 'Class time in "HH:MM" format')
 
   // Step 2: Check login
   try {
-    await page.waitForSelector('form[action="/dashboard/classes"]')
+    await page.waitForSelector('form[action="/dashboard/classes"]', options.page)
     log.info('Login success!')
   } catch (loginError) {
     log.error('Login error')
@@ -42,8 +42,10 @@ program.requiredOption('-t, --time <time>', 'Class time in "HH:MM" format')
 
   // Step 3: Go to program/day schedule page
   const query = `date=${date}&program_id=${programId}`
-  await page.goto(`${crosshero.baseUrl}/dashboard/classes?${query}`)
-  await page.waitForSelector('#class_reservation_single_class_id')
+  await Promise.all([
+    page.waitForNavigation(options.page),
+    page.goto(`${crosshero.baseUrl}/dashboard/classes?${query}`)
+  ])
 
   // Step 4: Retrieve class schedule and get class ID
   log.info('Retrieving program/day schedule...')
@@ -64,8 +66,8 @@ program.requiredOption('-t, --time <time>', 'Class time in "HH:MM" format')
   const classId = classes[time]
   if (classId) {
     await Promise.all([
-      page.goto(`${crosshero.baseUrl}/dashboard/classes?id=${classId}`),
-      page.waitForNavigation()
+      page.waitForNavigation(options.page),
+      page.goto(`${crosshero.baseUrl}/dashboard/classes?id=${classId}`)
     ])
   } else {
     log.error('Class not found with given date and time')
@@ -75,27 +77,27 @@ program.requiredOption('-t, --time <time>', 'Class time in "HH:MM" format')
   // Step 6: Book class or sign in waiting list
   try {
     log.info(`Trying to book ${time} (${classId}) class...`)
-    await page.waitForSelector('#classes-sign-in', options)
+    await page.waitForSelector('#classes-sign-in', options.page)
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForNavigation(options.page),
       page.click('#classes-sign-in')
     ])
   } catch (classIsFull) {
     log.info('Class is full, trying to sign in waiting list...')
-    await page.waitForSelector('#classes-waiting-list', options)
+    await page.waitForSelector('#classes-waiting-list', options.page)
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForNavigation(options.page),
       page.click('#classes-waiting-list')
     ])
   }
 
   // Step 7: Check process and notify
   try {
-    await page.waitForSelector('a[href^="/dashboard/waiting_lists"][data-method=delete]', options)
+    await page.waitForSelector('a[href^="/dashboard/waiting_lists"][data-method=delete]', options.page)
     log.info('You are signed in waiting list')
     await notify(`CrossHero class at ${time} (${date}) is full! You are signed in waiting list`)
   } catch (notInWaitingList) {
-    await page.waitForSelector('.alert-info', options)
+    await page.waitForSelector('.alert-info', options.page)
     log.info('Your class was booked successfull!')
     await notify(`CrossHero class at ${time} (${date}) was booked successfully!`)
   }
