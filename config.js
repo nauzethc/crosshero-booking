@@ -10,6 +10,14 @@ module.exports = {
     chatId: ''
   },
   options: {
-    timeout: 10000
+    browser: {
+      // Uncomment if you are using Docker image
+      // executablePath: 'google-chrome-unstable',
+      headless: true
+    },
+    page: {
+      timeout: 10000
+    }
   }
 }
+
