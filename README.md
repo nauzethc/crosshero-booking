@@ -38,3 +38,13 @@ Tip: Go to any class of your desired program and copy `program_id` value from th
 ```
 node main.js -p PROGRAM_HASH -d "DD/MM/YYYY" -t "HH:MM"
 ```
+
+
+## Run with Docker
+
+`docker-compose.yml` is ready to install `puppeteer` and Google Chrome inside a Docker container.
+Also you can configure `crontab` which is registered within container to run automated bookings.
+
+```
+docker-compose up --build
+```
