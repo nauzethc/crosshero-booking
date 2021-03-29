@@ -41,11 +41,22 @@ program.requiredOption('-t, --time <time>', 'Class time in "HH:MM" format')
   }
 
   // Step 3: Go to program/day schedule page
+  log.info(`Requesting ${date} schedule page`)
   const query = `date=${date}&program_id=${programId}`
+<<<<<<< HEAD
   await Promise.all([
     page.waitForNavigation(options.page),
     page.goto(`${crosshero.baseUrl}/dashboard/classes?${query}`)
   ])
+=======
+  await page.goto(`${crosshero.baseUrl}/dashboard/classes?${query}`)
+  try {
+    await page.waitForSelector('#class_reservation_single_class_id', options)
+  } catch (noClassesFound) {
+    log.error('Given day has not any classes open yet')
+    return browser.close()
+  }
+>>>>>>> 2bdfd7a3c1956bd945fde9abc377c005ac089305
 
   // Step 4: Retrieve class schedule and get class ID
   log.info('Retrieving program/day schedule...')
