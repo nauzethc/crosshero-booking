@@ -17,7 +17,9 @@ module.exports = {
     },
     page: {
       timeout: 10000
+    },
+    log: {
+      timestampFormat: 'YYYY-MM-DD HH:mm:ss'
     }
   }
 }
-
