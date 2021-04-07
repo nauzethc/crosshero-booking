@@ -1,8 +1,8 @@
+const { crosshero, options } = require('./config')
 const notify = require('./notify')
 const puppeteer = require('puppeteer')
-const log = require('simple-node-logger').createSimpleLogger()
+const log = require('simple-node-logger').createSimpleLogger(options.log)
 const { program } = require('commander')
-const { crosshero, options } = require('./config')
 
 program.version('0.0.1')
 program.requiredOption('-p, --program-id <id>', 'CrossHero program ID')
@@ -89,12 +89,17 @@ program.requiredOption('-t, --time <time>', 'Class time in "HH:MM" format')
       page.click('#classes-sign-in')
     ])
   } catch (classIsFull) {
-    log.info('Class is full, trying to sign in waiting list...')
-    await page.waitForSelector('#classes-waiting-list', options.page)
-    await Promise.all([
-      page.waitForNavigation(options.page),
-      page.click('#classes-waiting-list')
-    ])
+    try {
+      log.info('Trying to sign in waiting list...')
+      await page.waitForSelector('#classes-waiting-list', options.page)
+      await Promise.all([
+        page.waitForNavigation(options.page),
+        page.click('#classes-waiting-list')
+      ])
+    } catch (classNotOpen) {
+      log.info('Class bookings are not open yet')
+      return browser.close()
+    }
   }
 
   // Step 7: Check process and notify
